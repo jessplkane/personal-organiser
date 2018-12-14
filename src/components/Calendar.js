@@ -1,42 +1,23 @@
 import React, { Component } from "react";
 import Calendar from "react-calendar";
 import { isSameDay } from "date-fns";
-import styled, { keyframes } from "styled-components";
+import styled from "styled-components";
 import Transition from "react-transition-group/Transition";
 
 import ToDoList from "./ToDoList";
 import BirthdaysList from "./Birthdays";
-
 import "./Calendar.scss";
+import { birthdays, toDos } from "../data/index";
 
-const fadeIn = keyframes`
-  from {
-    opacity: 0;
-  }
+const defaultStyle = {
+  transition: `opacity 150ms ease-in-out`,
+  opacity: 0
+};
 
-  to {
-    opacity: 1;
-  }
-`;
-
-const fadeOut = keyframes`
-  from: {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  to: {
-    opacity: 0;
-    visibility: hidden;
-  }
-`;
-
-const birthdays = [
-  { person: "Charlie", date: "Fri Dec 14 2018 00:00:00" },
-  { person: "Lauren", date: "Fri Dec 14 2018 00:00:00" },
-  { person: "George", date: "Mon Dec 31 2018 00:00:00" },
-  { person: "Jess", date: "Sunday Jan 27 2019 00:00:00" }
-];
+const transitionStyles = {
+  entering: { opacity: 0 },
+  entered: { opacity: 1 }
+};
 
 const Container = styled.div`
   width: 50%;
@@ -51,23 +32,35 @@ const DetailWrapper = styled.div`
 
 const Detail = styled.div`
   width: calc(50% - 15px);
-  background-color: ${p => p.color};
-  animation: ${p => (p.isOpen ? fadeIn : fadeOut)} 2s linear;
+  border: 1px solid grey;
 `;
 
 class CalendarContainer extends Component {
   state = {
     date: new Date(),
-    birthdays: []
+    birthdays: [],
+    toDoList: []
   };
 
   componentWillMount() {
     birthdays.find(birthday => {
       if (isSameDay(birthday.date, this.state.date)) {
         return this.setState(prevState => ({
-          birthdays: [...prevState.birthdays, birthday.person]
+          birthdays: [...prevState.birthdays, birthday]
         }));
       }
+
+      return null;
+    });
+
+    toDos.find(toDo => {
+      if (isSameDay(toDo.date, this.state.date)) {
+        return this.setState(prevState => ({
+          toDoList: [...prevState.toDoList, toDo]
+        }));
+      }
+
+      return null;
     });
   }
 
@@ -77,9 +70,21 @@ class CalendarContainer extends Component {
     birthdays.find(birthday => {
       if (isSameDay(birthday.date, date)) {
         return this.setState(prevState => ({
-          birthdays: [...prevState.birthdays, birthday.person]
+          birthdays: [...prevState.birthdays, birthday]
         }));
       }
+
+      return null;
+    });
+
+    toDos.find(toDo => {
+      if (isSameDay(toDo.date, this.state.date)) {
+        return this.setState(prevState => ({
+          toDoList: [...prevState.toDoList, toDo]
+        }));
+      }
+
+      return null;
     });
 
     this.setState({ date });
@@ -99,13 +104,17 @@ class CalendarContainer extends Component {
         </Container>
 
         <DetailWrapper>
-          <Detail color="pink">
+          <Detail>
             <ToDoList date={date} />
           </Detail>
-          {console.log(birthdays.length > 0)}
-          <Detail color="green" isOpen={birthdays.length > 0}>
-            <BirthdaysList date={date} birthdays={birthdays} />
-          </Detail>
+
+          <Transition in={birthdays.length > 0} timeout={0}>
+            {state => (
+              <Detail style={{ ...defaultStyle, ...transitionStyles[state] }}>
+                <BirthdaysList date={date} birthdays={birthdays} />
+              </Detail>
+            )}
+          </Transition>
         </DetailWrapper>
       </div>
     );
