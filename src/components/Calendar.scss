@@ -1,0 +1,13 @@
+.calendar {
+  width: 100%;
+  height: auto;
+
+  .react-calendar__tile {
+    &--active {
+      background-color: transparent;
+      border: 1px solid blue;
+      border-radius: 50%;
+      color: black;
+    }
+  }
+}
