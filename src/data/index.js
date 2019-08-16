@@ -24,14 +24,26 @@ export const birthdays = [
 export const toDos = [
   {
     task: "Do taxes",
-    date: "Fri Dec 14 2018"
+    date: "Fri May 3 2019"
   },
   {
     task: "Go to hairdresser",
-    date: "Fri Dec 14 2018"
+    date: "Sat May 4 2019"
   },
   {
     task: "Pick up dry cleaning",
-    date: "Fri Dec 14 2018"
+    date: "Fri May 3 2019"
+  },
+  {
+    task: "Clean car",
+    date: "Tue Apr 30 2019"
+  },
+  {
+    task: "Hoover house",
+    date: "Thur May 9 2019"
+  },
+  {
+    task: "Go to hairdresser",
+    date: "Sun May 5 2019"
   }
 ];

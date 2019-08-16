@@ -15,3 +15,7 @@ class App extends Component {
 }
 
 export default App;
+
+// TODO: Add data source
+// TODO: Add async req to checkboxes for to do list so that
+// items can be deleted or styled as "done"

@@ -65,7 +65,8 @@ class CalendarContainer extends Component {
   }
 
   onChange = date => {
-    this.setState({ birthdays: [] });
+    // Reset state
+    this.setState({ birthdays: [], toDoList: [] });
 
     birthdays.find(birthday => {
       if (isSameDay(birthday.date, date)) {
@@ -78,7 +79,7 @@ class CalendarContainer extends Component {
     });
 
     toDos.find(toDo => {
-      if (isSameDay(toDo.date, this.state.date)) {
+      if (isSameDay(toDo.date, date)) {
         return this.setState(prevState => ({
           toDoList: [...prevState.toDoList, toDo]
         }));
@@ -91,7 +92,7 @@ class CalendarContainer extends Component {
   };
 
   render() {
-    const { birthdays, date } = this.state;
+    const { birthdays, date, toDoList } = this.state;
 
     return (
       <div>
@@ -104,9 +105,13 @@ class CalendarContainer extends Component {
         </Container>
 
         <DetailWrapper>
-          <Detail>
-            <ToDoList date={date} />
-          </Detail>
+          <Transition in={toDoList.length > 0} timeout={0}>
+            {state => (
+              <Detail style={{ ...defaultStyle, ...transitionStyles[state] }}>
+                <ToDoList date={date} tasks={toDoList} />
+              </Detail>
+            )}
+          </Transition>
 
           <Transition in={birthdays.length > 0} timeout={0}>
             {state => (
